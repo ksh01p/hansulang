@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>홈</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>홈페이지</h2>
+<p th:if="${session.loginUser != null}">
+    환영합니다, <span th:text="${session.loginUser.username}"></span>님!
+    (권한: <span th:text="${session.loginUser.role}"></span>)
+    <br>
+    <a th:href="@{/logout}">로그아웃</a>
+</p>
+<p th:if="${session.loginUser == null}">
+    <a th:href="@{/login}">로그인</a> 또는 <a th:href="@{/register}">회원가입</a>해주세요.
+</p>
+</body>
+</html>

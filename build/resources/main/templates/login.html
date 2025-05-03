@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그인</title>
+    <meta charset="UTF-8">
+    <!-- jQuery 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h2>로그인</h2>
+<div id="loginError" style="color:red;"></div>
+<form id="loginForm" th:action="@{/login}" method="post">
+    <div>
+        <label>아이디:</label>
+        <input type="text" name="username" required />
+    </div>
+    <div>
+        <label>비밀번호:</label>
+        <input type="password" name="password" required />
+    </div>
+    <div>
+        <button type="submit">로그인</button>
+    </div>
+</form>
+<p>계정이 없으신가요? <a th:href="@{/register}">회원가입하기</a></p>
+
+<script>
+    $(function(){
+        $('#loginForm').on('submit', function(e){
+            e.preventDefault();
+            var $form = $(this);
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),        // username=xxx&password=yyy
+                dataType: 'text',               // 리다이렉트가 아닌 plain text 처리
+                success: function(data, status, xhr){
+                    // 로그인 성공 시 무조건 홈으로
+                    window.location.href = '/index';
+                },
+                error: function(xhr){
+                    // 400/401 등 오류 처리
+                    if(xhr.status === 302) {
+                        // (간혹 302로 올 경우)
+                        window.location.href = xhr.getResponseHeader('Location');
+                    } else {
+                        $('#loginError').text('로그인에 실패했습니다.');
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
