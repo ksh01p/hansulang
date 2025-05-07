@@ -1,0 +1,20 @@
+<!-- src/main/resources/templates/board/list.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메뉴 목록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/list.js"></script>
+</head>
+<body>
+<h1>메뉴 목록</h1>
+<p><a href="/board/create">새 메뉴 등록</a></p>
+<table border="1">
+    <thead>
+    <tr><th>ID</th><th>이름</th><th>가격</th><th>설명</th><th>리뷰</th></tr>
+    </thead>
+    <tbody id="menuTableBody"></tbody>
+</table>
+</body>
+</html>
