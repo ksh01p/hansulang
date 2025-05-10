@@ -1,21 +1,64 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<!--    <link rel="stylesheet" href="/css/style.css">-->
     <meta charset="UTF-8">
-    <title>메뉴 목록</title>
+    <title>Hanssul-lin 메뉴</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/js/list.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>메뉴 목록</h1>
-<p><a href="/board/create">새 메뉴 등록</a></p>
-<table border="1">
-    <thead>
-    <tr><th>ID</th><th>이름</th><th>가격</th><th>설명</th><th>리뷰</th></tr>
-    </thead>
-    <tbody id="menuTableBody"></tbody>
-</table>
+<body class="bg-white text-black">
+
+<!-- 로고 -->
+<div class="bg-black text-white p-4 text-center text-2xl font-bold">
+    Hanssul-lin 🍽️
+</div>
+
+<!-- 추천 메뉴 + 리뷰 카드 -->
+<div class="p-4">
+    <!-- 추천 메뉴 -->
+    <div class="bg-gray-200 rounded-xl text-center p-4">
+        <div class="font-semibold text-lg">학생식당 · 따스한동</div>
+        <div id="topMenus" class="bg-black text-white mt-2 p-2 rounded text-sm">
+            로딩 중...
+        </div>
+    </div>
+
+    <!-- 리뷰 목록 -->
+    <h2 class="mt-6 font-bold text-lg">학관 음식 리뷰</h2>
+    <div id="menuCards" class="grid grid-cols-3 gap-4 mt-4">
+        <!-- JS로 채워짐 -->
+    </div>
+
+    <!-- 리뷰쓰기 버튼 -->
+    <div class="text-center mt-6">
+        <a href="/board/review/write" class="bg-black text-white px-4 py-2 rounded-full">리뷰쓰기</a>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $.get("/api/menus", function(data){
+            const topMenus = data.slice(0, 2); // 상단 추천 메뉴 2개
+            const cardMenus = data;            // 모든 메뉴 카드
+
+            // 추천 메뉴 텍스트 출력
+            const topMenuNames = topMenus.map(m => m.name).join('<br>');
+            $('#topMenus').html(topMenuNames);
+
+            // 리뷰 카드 출력
+            const cardContainer = $('#menuCards').empty();
+            cardMenus.forEach(menu => {
+                const card = `
+            <div class="rounded overflow-hidden shadow-lg bg-white">
+              <img src="${menu.imageUrl}" alt="${menu.name}" class="w-full h-24 object-cover">
+              <div class="p-2 text-center text-sm font-semibold">${menu.name} ⭐${menu.score.toFixed(1)}</div>
+            </div>
+          `;
+                cardContainer.append(card);
+            });
+        });
+    });
+</script>
 </body>
 </html>
