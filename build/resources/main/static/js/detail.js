@@ -1,4 +1,3 @@
-// src/main/resources/static/js/detail.js
 $(function(){
     const menuId = location.pathname.split('/').pop();
 

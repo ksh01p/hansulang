@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/controller/page/BoardController.java
 package com.example.demo.controller.page;
 
 import org.springframework.stereotype.Controller;

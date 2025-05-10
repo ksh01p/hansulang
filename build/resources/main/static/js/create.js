@@ -1,4 +1,3 @@
-// src/main/resources/static/js/create.js
 $(function(){
     $('#createMenuForm').submit(function(e){
         e.preventDefault();

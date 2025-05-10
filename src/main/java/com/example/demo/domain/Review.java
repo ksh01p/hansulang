@@ -3,6 +3,9 @@ package com.example.demo.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reviews")
@@ -24,4 +27,8 @@ public class Review {
     private String content;
 
     private boolean recommend;     // true=추천, false=비추천
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 }

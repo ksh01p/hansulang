@@ -8,6 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+* 5/2(금)
+ * 로그인 관련 페이지 컨트롤러
+ * 로그인 후에 role에 따라 페이지 접속을 담당함
+* */
+
 @Controller
 public class AuthController {
 

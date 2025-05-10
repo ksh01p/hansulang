@@ -1,4 +1,3 @@
-// src/main/resources/static/js/list.js
 $(function(){
     $.ajax({
         url: '/api/menus',

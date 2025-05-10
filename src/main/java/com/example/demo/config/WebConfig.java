@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 5/2(금) 김수형
  * Spring WebConfig 설정 파일
  */
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 

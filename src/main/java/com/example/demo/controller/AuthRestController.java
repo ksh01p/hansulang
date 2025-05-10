@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
  *
  * 이 RestController는 REST 방식으로 로그인/회원가입/로그아웃을 처리하는 API 전용 RestContoller
  * 요청과 응답은 HTML이 아닌 JSON 형태로 주고받습니다.
+ *
+ * --> MVC 패턴 사용 X Restful 방식 사용함
  */
 @RestController
 @RequestMapping("/api/auth")

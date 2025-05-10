@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/service/impl/MenuServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.domain.Menu;

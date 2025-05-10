@@ -2,9 +2,11 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.Review;
+import com.example.demo.dto.ReviewRequestDto;
+
 import java.util.List;
 
 public interface ReviewService {
-    Review createReview(Long menuId, Review review);
+    Review createReview(Long menuId, ReviewRequestDto dto);
     List<Review> getReviewsByMenuId(Long menuId);
 }
