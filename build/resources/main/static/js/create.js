@@ -1,16 +1,15 @@
 $(function(){
     $('#createMenuForm').submit(function(e){
         e.preventDefault();
-        const data = {
-            name: $('input[name=name]').val(),
-            price: parseFloat($('input[name=price]').val()),
-            description: $('textarea[name=description]').val()
-        };
+
+        const formData = new FormData(this);
+
         $.ajax({
             url: '/api/menus',
             method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function(){
                 alert('메뉴 등록 성공');
                 location.href = '/board/list';

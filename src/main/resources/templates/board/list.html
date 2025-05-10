@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<!--    <link rel="stylesheet" href="/css/style.css">-->
     <meta charset="UTF-8">
-    <title>메뉴 목록</title>
+    <title>Hanssul-lin 메뉴 목록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/list.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>메뉴 목록</h1>
-<p><a href="/board/create">새 메뉴 등록</a></p>
-<table border="1">
-    <thead>
-    <tr><th>ID</th><th>이름</th><th>가격</th><th>설명</th><th>리뷰</th></tr>
-    </thead>
-    <tbody id="menuTableBody"></tbody>
-</table>
+<body class="bg-white text-black">
+
+<!-- 로고 -->
+<div class="bg-black text-white p-4 text-center text-2xl font-bold">
+    Hanssul-lin 🍱 메뉴 목록
+</div>
+
+<!-- 메뉴 카드 컨테이너 -->
+<div class="p-6">
+    <div class="text-right mb-4">
+        <a href="/board/create" class="bg-black text-white px-4 py-2 rounded-full">+ 새 메뉴 등록</a>
+    </div>
+
+    <div id="menuList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- JS로 채워짐 -->
+    </div>
+</div>
+
 </body>
 </html>

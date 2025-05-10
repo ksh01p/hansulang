@@ -5,12 +5,15 @@ import com.example.demo.domain.Menu;
 import com.example.demo.domain.Review;
 import com.example.demo.dto.ReviewDto;
 import com.example.demo.dto.ReviewRequestDto;
+import com.example.demo.service.FileService;
 import com.example.demo.service.MenuService;
 import com.example.demo.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +25,29 @@ public class MenuRestController {
 
     private final MenuService menuService;
     private final ReviewService reviewService;
+    private final FileService fileService;  // ← 이 줄 추가
+
 
     // 1) 메뉴 등록
-    @PostMapping
-    public ResponseEntity<Menu> createMenu(@RequestBody Menu menu) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Menu> createMenu(
+            @RequestParam String name,
+            @RequestParam Double price,
+            @RequestParam String description,
+            @RequestParam(value = "file", required = false) MultipartFile file
+    ) {
+        // 파일을 저장하고 파일 URL을 반환하는 로직 (예: S3 or 로컬 저장)
+        String imageUrl = file != null && !file.isEmpty()
+                ? fileService.save(file)
+                : null;
+
+
+        Menu menu = new Menu();
+        menu.setName(name);
+        menu.setPrice(price);
+        menu.setDescription(description);
+        menu.setImageUrl(imageUrl);
+
         Menu saved = menuService.createMenu(menu);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }

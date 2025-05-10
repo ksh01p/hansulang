@@ -16,4 +16,7 @@ public class Menu {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }
