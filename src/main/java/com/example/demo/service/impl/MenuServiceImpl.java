@@ -1,11 +1,15 @@
+// src/main/java/com/example/demo/service/impl/MenuServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.domain.Menu;
+import com.example.demo.domain.User;
 import com.example.demo.repository.MenuRepository;
 import com.example.demo.service.MenuService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -27,5 +31,16 @@ public class MenuServiceImpl implements MenuService {
     public Menu getMenuById(Long id) {
         return menuRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid menu id: " + id));
+    }
+
+    @Override
+    @Transactional
+    public void deleteMenu(Long id, User currentUser) throws AccessDeniedException {
+        Menu menu = menuRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("메뉴 없음: " + id));
+        if (!menu.getCreatedBy().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("본인의 메뉴만 삭제할 수 있습니다.");
+        }
+        menuRepo.delete(menu);
     }
 }

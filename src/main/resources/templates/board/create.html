@@ -19,26 +19,38 @@
 <div class="max-w-2xl mx-auto mt-10 bg-white border border-gray-200 rounded-lg shadow p-6">
     <h2 class="text-xl font-semibold mb-6 text-center">새 메뉴 추가</h2>
     <form id="createMenuForm" enctype="multipart/form-data" class="space-y-6">
+        <!-- 식당 -->
+        <div>
+            <label class="block font-medium mb-1">식당</label>
+            <input type="text" name="restaurant" class="w-full border border-gray-300 rounded p-2" required>
+        </div>
+
+        <!-- 이름 -->
         <div>
             <label class="block font-medium mb-1">이름</label>
             <input type="text" name="name" class="w-full border border-gray-300 rounded p-2" required>
         </div>
 
+        <!-- 가격 -->
         <div>
             <label class="block font-medium mb-1">가격 (₩)</label>
             <input type="number" name="price" class="w-full border border-gray-300 rounded p-2" required>
         </div>
 
+        <!-- 설명 -->
         <div>
             <label class="block font-medium mb-1">설명</label>
             <textarea name="description" rows="4" class="w-full border border-gray-300 rounded p-2" required></textarea>
         </div>
 
+
+        <!-- 사진 -->
         <div>
             <label class="block font-medium mb-1">이미지</label>
             <input type="file" name="file" accept="image/*" class="w-full border border-gray-300 rounded p-2">
         </div>
 
+        <!-- 버튼 -->
         <div class="text-center">
             <button type="submit" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition">
                 등록하기

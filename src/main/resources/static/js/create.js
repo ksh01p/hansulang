@@ -1,9 +1,7 @@
 $(function(){
     $('#createMenuForm').submit(function(e){
         e.preventDefault();
-
         const formData = new FormData(this);
-
         $.ajax({
             url: '/api/menus',
             method: 'POST',

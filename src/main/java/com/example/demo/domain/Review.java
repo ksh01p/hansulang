@@ -14,19 +14,32 @@ public class Review {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @JoinColumn(name = "menu_id", nullable = false)
+    /** 작성자 **/
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    /** 대상 메뉴 **/
+    @ManyToOne
+    @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 
+    /** 사용자가 남긴 이름(후보 필드) **/
     @Column(name = "user_name", nullable = false)
-    private String userName;       // 작성자 이름
+    private String userName;
 
-    private int score;             // 1–5
-    private String title;
+    private int score;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private boolean recommend;     // true=추천, false=비추천
+    private boolean recommend;
+
+    @Column(name = "photo_url")
+    private String photoUrl;
+
+    @Column(name = "like_count", nullable = false)
+    private Integer likeCount = 0;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
