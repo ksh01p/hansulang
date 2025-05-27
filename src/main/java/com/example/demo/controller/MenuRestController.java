@@ -66,10 +66,26 @@ public class MenuRestController {
     @GetMapping
     public List<MenuDto> listMenus() {
         return menuService.getAllMenus().stream()
-                .map(this::mapToDto)
+                .map(menu -> {
+                    // Map basic Menu → MenuDto
+                    MenuDto dto = mapToDto(menu);
+
+                    // load reviews for metrics
+                    List<Review> reviews = reviewService.getReviewsByMenuId(menu.getId());
+                    int count = reviews.size();
+                    double avg = count == 0
+                            ? 0.0
+                            : reviews.stream()
+                            .mapToInt(Review::getScore)
+                            .average()
+                            .orElse(0.0);
+
+                    dto.setReviewCount(count);
+                    dto.setAvgScore(Math.round(avg * 10) / 10.0); // 소수점 첫째자리까지 반올림
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
-
     /** 3) 메뉴 상세 조회 **/
     @GetMapping("/{id}")
     public ResponseEntity<MenuDto> getMenu(@PathVariable Long id) {

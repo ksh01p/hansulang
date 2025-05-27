@@ -1,68 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
-    <title>회원가입</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Tailwind CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- jQuery -->
+    <meta charset="UTF-8"/>
+    <title>Hanssul-lin | 회원가입</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-xl">
-    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">회원가입</h2>
-
+    <h2 class="text-2xl font-bold mb-6 text-center">회원가입</h2>
     <div id="signupError" class="text-red-500 text-sm mb-4 text-center"></div>
-
-    <form id="registerForm" th:action="@{/register}" method="post" class="space-y-4">
+    <form id="registerForm" action="/api/auth/register" method="post" class="space-y-4">
         <div>
-            <label class="block text-sm font-semibold text-gray-700">아이디</label>
-            <input type="text" name="username" required
-                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black" />
+            <label class="block text-sm font-semibold text-gray-700">아이디 (Handong 이메일)</label>
+            <input
+                    id="register-username"
+                    type="email" name="username" required
+                    pattern=".+@handong\.ac\.kr"
+                    title="반드시 @handong.ac.kr 이메일만 사용 가능합니다."
+                    class="w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+            />
         </div>
         <div>
             <label class="block text-sm font-semibold text-gray-700">비밀번호</label>
-            <input type="password" name="password" required
-                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black" />
+            <input
+                    id="register-password"
+                    type="password" name="password" required
+                    class="w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+            />
         </div>
         <div>
             <label class="block text-sm font-semibold text-gray-700">권한</label>
-            <select name="role"
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+            <select
+                    id="register-role"
+                    name="role"
+                    class="w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+            >
                 <option value="USER">USER</option>
                 <option value="ADMIN">ADMIN</option>
             </select>
         </div>
         <div>
-            <button type="submit"
-                    class="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
+            <button
+                    type="submit"
+                    class="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+            >
                 가입하기
             </button>
         </div>
     </form>
-
-    <p class="mt-4 text-center text-sm text-gray-600">
-        이미 계정이 있으신가요?
-        <a th:href="@{/login}" class="text-blue-500 hover:underline">로그인하기</a>
-    </p>
 </div>
 
 <script>
     $(function(){
         $('#registerForm').on('submit', function(e){
             e.preventDefault();
-            var $form = $(this);
+            const usernameInput = document.getElementById('register-username');
+            if (!usernameInput.checkValidity()) {
+                $('#signupError').text('Handong 이메일(@handong.ac.kr)만 사용 가능합니다.');
+                return;
+            }
+            $('#signupError').text('');
+            const payload = {
+                username: usernameInput.value,
+                password: $('#register-password').val(),
+                role: $('#register-role').val()
+            };
             $.ajax({
-                url: $form.attr('action'),
+                url: '/api/auth/register',
                 type: 'POST',
-                data: $form.serialize(),
-                dataType: 'text',
-                success: function(data, status, xhr){
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function(){
                     window.location.href = '/login';
                 },
                 error: function(xhr){
-                    $('#signupError').text('회원가입에 실패했습니다: ' + (xhr.responseText || xhr.status));
+                    const msg = xhr.responseJSON?.message || '회원가입에 실패했습니다.';
+                    $('#signupError').text(msg);
                 }
             });
         });

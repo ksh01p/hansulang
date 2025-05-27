@@ -15,4 +15,8 @@ public class MenuDto {
     private String createdByUsername;
     private int recommendCount;
     private int notRecommendCount;
+
+    private int     reviewCount;
+    private double  avgScore;
+
 }

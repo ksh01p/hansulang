@@ -1,74 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Hanssul-lin | 로그인</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Tailwind CSS & jQuery -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-
 <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
-    <!-- 상단 로고 -->
     <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-black">Hanssul-lin <span class="inline-block ml-2">👨‍🍳</span></h1>
+        <h1 class="text-3xl font-bold text-black">Hanssul-lin <span>👨‍🍳</span></h1>
         <p class="text-gray-600 text-sm mt-1">식단 리뷰를 즐기려면 먼저 로그인하세요!</p>
     </div>
-
-    <!-- 에러 메시지 -->
     <div id="loginError" class="text-red-500 text-sm mb-4 text-center"></div>
-
-    <!-- 로그인 폼 -->
-    <form id="loginForm" th:action="@{/login}" method="post" class="space-y-4">
+    <form id="loginForm" action="/api/auth/login" method="post" class="space-y-4">
         <div>
-            <label class="block text-sm font-semibold text-gray-700">아이디</label>
-            <input type="text" name="username" required
-                   class="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-black">
+            <label class="block text-sm font-semibold text-gray-700">아이디 (Handong 이메일)</label>
+            <input
+                    id="login-username"
+                    type="email" name="username" required
+                    pattern=".+@handong\.ac\.kr"
+                    title="반드시 @handong.ac.kr 이메일만 사용 가능합니다."
+                    class="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            />
         </div>
         <div>
             <label class="block text-sm font-semibold text-gray-700">비밀번호</label>
-            <input type="password" name="password" required
-                   class="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-black">
+            <input
+                    id="login-password"
+                    type="password" name="password" required
+                    class="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            />
         </div>
         <div>
-            <button type="submit"
-                    class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">로그인</button>
+            <button
+                    type="submit"
+                    class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
+            >
+                로그인
+            </button>
         </div>
     </form>
-
-    <!-- 회원가입 링크 -->
     <p class="mt-6 text-center text-sm text-gray-600">
-        계정이 없으신가요? <a th:href="@{/register}" class="text-blue-500 hover:underline">회원가입하기</a>
+        계정이 없으신가요?
+        <a href="/register" class="text-blue-500 hover:underline">회원가입하기</a>
     </p>
 </div>
 
-<!-- jQuery 비동기 로그인 처리 -->
 <script>
     $(function(){
         $('#loginForm').on('submit', function(e){
             e.preventDefault();
-            const $form = $(this);
+            const usernameInput = document.getElementById('login-username');
+            if (!usernameInput.checkValidity()) {
+                $('#loginError').text('Handong 이메일(@handong.ac.kr)만 사용 가능합니다.');
+                return;
+            }
+            $('#loginError').text('');
+            const payload = {
+                username: usernameInput.value,
+                password: $('#login-password').val()
+            };
             $.ajax({
-                url: $form.attr('action'),
+                url: '/api/auth/login',
                 type: 'POST',
-                data: $form.serialize(),
-                dataType: 'text',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
                 success: function(){
                     window.location.href = '/board/list';
                 },
-                error: function(xhr){
-                    if(xhr.status === 302) {
-                        window.location.href = xhr.getResponseHeader('Location');
-                    } else {
-                        $('#loginError').text('로그인에 실패했습니다. 아이디 또는 비밀번호를 확인하세요.');
-                    }
+                error: function(){
+                    $('#loginError').text('로그인에 실패했습니다. 아이디 또는 비밀번호를 확인하세요.');
                 }
             });
         });
     });
 </script>
-
 </body>
 </html>
