@@ -32,6 +32,14 @@ public class ReviewServiceImpl implements ReviewService {
         Menu menu = menuRepo.findById(menuId)
                 .orElseThrow(() -> new EntityNotFoundException("메뉴를 찾을 수 없습니다. id=" + menuId));
 
+        if (currentUser.getUsername() == null || currentUser.getUsername().trim().isEmpty()) {
+            throw new IllegalArgumentException("작성자 이름이 없습니다.");
+        }
+
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("리뷰 내용은 비어있을 수 없습니다.");
+        }
+
         Review review = new Review();
         review.setMenu(menu);
         review.setUser(currentUser);
