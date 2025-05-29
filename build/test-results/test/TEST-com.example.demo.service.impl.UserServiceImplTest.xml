@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.service.impl.UserServiceImplTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-05-28T15:08:21.607Z" hostname="BOOK-CI93RAR7FF" time="0.244">
+  <properties/>
+  <testcase name="testDuplicateEmail_ThrowsException()" classname="com.example.demo.service.impl.UserServiceImplTest" time="0.124"/>
+  <testcase name="testNonHandongEmailDomain_ThrowsException()" classname="com.example.demo.service.impl.UserServiceImplTest" time="0.019"/>
+  <testcase name="testSuccessfulRegistration_SavesUser()" classname="com.example.demo.service.impl.UserServiceImplTest" time="0.026"/>
+  <testcase name="testLoginWithWrongUsername_ThrowsException()" classname="com.example.demo.service.impl.UserServiceImplTest" time="0.007"/>
+  <testcase name="testLoginSuccess_ReturnsUser()" classname="com.example.demo.service.impl.UserServiceImplTest" time="0.011"/>
+  <testcase name="testLoginWithWrongPassword_ThrowsException()" classname="com.example.demo.service.impl.UserServiceImplTest" time="0.017"/>
+  <testcase name="testInvalidEmailFormat_ThrowsException()" classname="com.example.demo.service.impl.UserServiceImplTest" time="0.012"/>
+  <system-out><![CDATA[Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+00:08:10.197 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.demo.service.impl.UserServiceImplTest]: UserServiceImplTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+00:08:10.378 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.service.impl.UserServiceImplTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.5)
+
+2025-05-29T00:08:10.934+09:00  INFO 23196 --- [    Test worker] c.e.d.service.impl.UserServiceImplTest   : Starting UserServiceImplTest using Java 19.0.2 with PID 23196 (started by 87062 in C:\hansulang)
+2025-05-29T00:08:10.939+09:00  INFO 23196 --- [    Test worker] c.e.d.service.impl.UserServiceImplTest   : No active profile set, falling back to 1 default profile: "default"
+2025-05-29T00:08:11.897+09:00  INFO 23196 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-29T00:08:12.257+09:00  INFO 23196 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 344 ms. Found 3 JPA repository interfaces.
+2025-05-29T00:08:12.536+09:00  WARN 23196 --- [    Test worker] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.example.demo]' package. Please check your configuration.
+2025-05-29T00:08:16.019+09:00  INFO 23196 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-29T00:08:16.153+09:00  INFO 23196 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-05-29T00:08:16.244+09:00  INFO 23196 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-29T00:08:16.513+09:00  INFO 23196 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-29T00:08:16.578+09:00  INFO 23196 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-29T00:08:17.065+09:00  INFO 23196 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@52b30dcd
+2025-05-29T00:08:17.069+09:00  INFO 23196 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-29T00:08:17.203+09:00  WARN 23196 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000511: The 5.6.51 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
+2025-05-29T00:08:18.876+09:00  INFO 23196 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-29T00:08:19.217+09:00  INFO 23196 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-29T00:08:20.425+09:00  WARN 23196 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-29T00:08:20.464+09:00  INFO 23196 --- [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2025-05-29T00:08:20.643+09:00 DEBUG 23196 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : 21 mappings in 'requestMappingHandlerMapping'
+2025-05-29T00:08:20.800+09:00 DEBUG 23196 --- [    Test worker] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**] in 'resourceHandlerMapping'
+2025-05-29T00:08:20.862+09:00 DEBUG 23196 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-05-29T00:08:20.917+09:00 DEBUG 23196 --- [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-05-29T00:08:21.548+09:00  INFO 23196 --- [    Test worker] c.e.d.service.impl.UserServiceImplTest   : Started UserServiceImplTest in 10.972 seconds (process running for 12.744)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

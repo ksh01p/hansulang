@@ -60,3 +60,6 @@ external:
 
 file:
   upload-dir: uploads
+
+test-user:
+  password: testpw1234
