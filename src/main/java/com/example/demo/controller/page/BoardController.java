@@ -20,4 +20,9 @@ public class BoardController {
     public String detailPage() {
         return "board/detail";
     }
+
+    @GetMapping("/profile")
+    public String profilePage() {
+        return "login";
+    }
 }
