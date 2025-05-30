@@ -26,11 +26,17 @@
     </p>
 </div>
 
-<!-- 리뷰 작성 폼 -->
-<div class="max-w-3xl mx-auto mt-8 p-4 bg-white border border-gray-200 rounded-lg shadow">
+<!-- 리뷰 작성 버튼 -->
+<div class="max-w-3xl mx-auto mt-8 p-4 text-right">
+    <button id="toggleReviewForm" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        리뷰 작성
+    </button>
+</div>
+
+<!-- 리뷰 작성 폼 (기본 숨김) -->
+<div id="reviewFormContainer" class="max-w-3xl mx-auto mt-4 p-4 bg-white border border-gray-200 rounded-lg shadow hidden">
     <h2 class="text-xl font-semibold mb-4">리뷰 작성</h2>
     <form id="reviewForm" enctype="multipart/form-data" class="space-y-4">
-        <!-- 로그인한 사용자의 ID를 JS에서 채워줍니다 -->
         <input type="hidden" id="userId" name="userId">
 
         <div>
@@ -79,6 +85,17 @@
     <h2 class="text-xl font-semibold mb-4">리뷰 목록</h2>
     <div id="reviews" class="space-y-4 text-sm text-gray-800">로딩 중…</div>
 </div>
+
+<!-- 폼 토글 스크립트 -->
+<script>
+    $(document).ready(function () {
+        $('#toggleReviewForm').on('click', function () {
+            $('#reviewFormContainer').toggleClass('hidden');
+            const isVisible = !$('#reviewFormContainer').hasClass('hidden');
+            $(this).text(isVisible ? '리뷰 작성 취소' : '리뷰 작성');
+        });
+    });
+</script>
 
 </body>
 </html>
