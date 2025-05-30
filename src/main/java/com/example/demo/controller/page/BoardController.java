@@ -21,8 +21,4 @@ public class BoardController {
         return "board/detail";
     }
 
-    @GetMapping("/profile")
-    public String profilePage() {
-        return "login";
-    }
 }
