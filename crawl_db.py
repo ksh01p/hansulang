@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pymysql
+from datetime import datetime
 
 # URL 설정
 url = 'http://hisnet.handong.edu/login/login.php'
@@ -14,9 +15,9 @@ DB_CONFIG = {
     "charset": "utf8mb4"
 }
 
-# 식당 ID → 이름 및 모드
+# 식당 ID → 이름/모드
 restaurant_map = {
-    'tr_box11_001': ('든든한동', 'multi'),
+    #'tr_box11_001': ('든든한동', 'multi'),
     'tr_box11_002': ('H:plate', 'single'),
     'tr_box11_003': ('Asian Market', 'single'),
     'tr_box11_005': ("Han's Deli", 'single'),
@@ -32,6 +33,7 @@ def parse_menu():
     soup = BeautifulSoup(res.text, 'html.parser')
 
     menus = []
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     for box_id, (restaurant, mode) in restaurant_map.items():
         tr = soup.select_one(f"tr#{box_id}")
@@ -44,24 +46,28 @@ def parse_menu():
             for i in range(3):
                 if i < len(tds):
                     items = [line.strip() for line in tds[i].get_text(separator="\n").split("\n")]
-                    items = [line for line in items if line and "원산지" not in line if line != '=' if line[0] != '(' if line[0] != '-']
+                    items = [line for line in items if line and "원산지" not in line and line != '=' and not line.startswith('(') and not line.startswith('-')]
                 else:
                     items = []
                 for item in items:
                     menus.append({
                         "restaurant": restaurant,
                         "name": item,
-                        "time": meals[i]
+                        "time": meals[i],
+                        "created_at": now,
+                        "updated_at": now
                     })
         else:
             text = tr.get_text(separator="\n").strip()
             lines = [line.strip() for line in text.split("\n") if line.strip()]
-            items = [line for line in lines if "원산지" not in line if line != '-' if line[0] != '(' if line[0] != '-']
+            items = [line for line in lines if "원산지" not in line and line != '-' and not line.startswith('(') and not line.startswith('-')]
             for item in items:
                 menus.append({
                     "restaurant": restaurant,
                     "name": item,
-                    "time": None
+                    "time": None,
+                    "created_at": now,
+                    "updated_at": now
                 })
 
     return menus
@@ -69,14 +75,33 @@ def parse_menu():
 def insert_to_db(menus):
     conn = pymysql.connect(**DB_CONFIG)
     cursor = conn.cursor()
+
     for menu in menus:
         try:
+            # 기존 레코드 확인
             cursor.execute(
-                "INSERT INTO food (restaurant, name, time) VALUES (%s, %s, %s)",
-                (menu['restaurant'], menu['name'], menu['time'])
+                "SELECT id FROM menu_items WHERE restaurant = %s AND name = %s",
+                (menu['restaurant'], menu['name'])
             )
+            result = cursor.fetchone()
+
+            if result:
+                # 이미 존재하면 updated_at만 갱신
+                cursor.execute(
+                    "UPDATE menu_items SET updated_at = %s WHERE id = %s",
+                    (menu['updated_at'], result[0])
+                )
+                print(f"[UPDATE] {menu['restaurant']} - {menu['name']}")
+            else:
+                # 없으면 새로 삽입
+                cursor.execute(
+                    "INSERT INTO menu_items(restaurant, name, time, created_at, updated_at, hisnet) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (menu['restaurant'], menu['name'], menu['time'], menu['created_at'], menu['updated_at'], 1)
+                )
+                print(f"[INSERT] {menu['restaurant']} - {menu['name']}")
         except Exception as e:
-            print("Insert error:", e, menu)
+            print("[ERROR]", e, menu)
+
     conn.commit()
     cursor.close()
     conn.close()
