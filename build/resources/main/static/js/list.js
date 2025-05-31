@@ -31,7 +31,7 @@ $(function(){
                     let buttons = `
                       <a href="/board/detail/${menu.id}"
                          class="inline-block mt-2 bg-black text-white px-3 py-1 rounded-full text-sm">
-                        리뷰쓰기
+                        리뷰 보기
                       </a>`;
                     if (currentUser && menu.createdById === currentUser.id) {
                         buttons += `

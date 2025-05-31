@@ -9,10 +9,40 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-white text-gray-900">
+<!-- 상단바 -->
+<nav class="bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
 
+            <!-- 왼쪽 로고 -->
+            <div class="flex items-center w-1/3">
+                <a href="/board/list" class="text-white text-3xl font-bold">Hanssul-lin</a>
+            </div>
+
+            <!-- 가운데 메뉴 -->
+            <div class="w-1/3 flex justify-center space-x-6">
+                    <a href="/board/list" class="text-gray-300 hover:text-white text-xl font-medium font-bold">
+                        메뉴 목록
+                    </a>
+                <!-- 메뉴 등록: 일반 상태 -->
+                <a href="/board/create" class="text-gray-300 hover:text-white text-xl font-medium font-bold">
+                    메뉴 등록
+                </a>
+            </div>
+
+            <!-- 오른쪽 로그아웃 -->
+            <div class="w-1/3 flex justify-end">
+                <a href="/logout" class="text-gray-300 hover:text-white text-xl font-medium font-bold">
+                    로그아웃
+                </a>
+
+            </div>
+        </div>
+    </div>
+</nav>
 <!-- 상단 로고 -->
 <div class="bg-black text-white p-4 text-center text-2xl font-bold">
-    Hanssul-lin 🍱 메뉴 상세
+    🍱 메뉴 상세
 </div>
 
 <!-- 메뉴 정보 -->
