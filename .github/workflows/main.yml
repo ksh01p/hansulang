@@ -1,0 +1,70 @@
+# .github/workflows/ci.yml
+name: CI Pipeline
+
+# 워크플로우를 트리거할 이벤트 지정
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build-and-test:
+    name: Build & Unit Test (Java + Frontend)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        jdk-version: ['17']    # Java 버전 (필요하다면 여러 버전 테스트 가능)
+        node-version: ['18']   # Node.js 버전 (프론트엔드가 있다면)
+
+    steps:
+      # 1) 코드 체크아웃
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2) JDK 설치 및 설정
+      - name: Set up JDK ${{ matrix.jdk-version }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.jdk-version }}
+
+      # 3) Gradle(또는 Maven) 캐시 설정 (선택 사항)
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper/
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # 4) 백엔드 빌드 & 유닛 테스트
+      - name: Build with Gradle
+        run: ./gradlew clean build --no-daemon
+
+      - name: Run Unit Tests
+        run: ./gradlew test --no-daemon
+
+      # 5) 프론트엔드 Lint/Build (프론트엔드가 있는 경우)
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend   # 프론트엔드 소스가 있다면 해당 경로로 지정
+        run: npm ci
+
+      - name: Run ESLint (Lint)
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Build Frontend (Production Build)
+        working-directory: ./frontend
+        run: npm run build
