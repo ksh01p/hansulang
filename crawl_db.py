@@ -95,8 +95,8 @@ def insert_to_db(menus):
             else:
                 # 없으면 새로 삽입
                 cursor.execute(
-                    "INSERT INTO menu_items(restaurant, name, time, created_at, updated_at, hisnet, recommend_count, not_recommend_count, price, user_id, image_url, description) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                    (menu['restaurant'], menu['name'], menu['time'], menu['created_at'], menu['updated_at'], 1, 0, 0, 4500, 152, '', '학생식당')
+                    "INSERT INTO menu_items(restaurant, name, time, created_at, updated_at, hisnet, recommend_count, not_recommend_count, price, user_id, image_url, description,avg_score,review_count) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                    (menu['restaurant'], menu['name'], menu['time'], menu['created_at'], menu['updated_at'], 1, 0, 0, 4500, 152, '', '학생식당',0.0,0)
                 )
                 print(f"[INSERT] {menu['restaurant']} - {menu['name']}")
         except Exception as e:

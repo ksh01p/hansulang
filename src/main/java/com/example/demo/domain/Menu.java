@@ -4,6 +4,8 @@ package com.example.demo.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "menu_items")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
@@ -26,10 +28,27 @@ public class Menu {
     @JoinColumn(name = "user_id", nullable = false)
     private User createdBy;
 
-    /** 통계 필드 **/
+    /** 기존 통계 필드 **/
     @Column(name = "recommend_count", nullable = false)
     private Integer recommendCount = 0;
 
     @Column(name = "not_recommend_count", nullable = false)
     private Integer notRecommendCount = 0;
+
+    /** 여기에 리뷰 통계 컬럼 추가 **/
+    @Column(name = "review_count", nullable = false)
+    private Integer reviewCount = 0;
+
+    @Column(name = "avg_score", nullable = false)
+    private Double avgScore = 0.0;
+
+    /** 학관 메뉴 여부 **/
+    @Column(name = "hisnet", nullable = true)
+    private Integer hisnet = 0;
+
+    @Column(name = "created_at", nullable = true)
+    private Timestamp created_at;
+
+    @Column(name = "updated_at", nullable = true)
+    private Timestamp updated_at;
 }

@@ -23,6 +23,7 @@ spring:
       hibernate.default_batch_fetch_size: 100
       hibernate.jdbc.time_zone: Asia/Seoul
 
+
   thymeleaf:
     cache: false
 

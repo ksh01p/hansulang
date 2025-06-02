@@ -8,6 +8,7 @@ import com.example.demo.dto.ReviewRequestDto;
 import com.example.demo.repository.MenuRepository;
 import com.example.demo.repository.ReviewRepository;
 import com.example.demo.service.ReviewService;
+import com.example.demo.service.MenuService;     // MenuService 주입
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepo;
     private final MenuRepository   menuRepo;
+    private final MenuService      menuService; // 통계 업데이트용 주입
 
     @Override
     @Transactional
@@ -31,14 +33,6 @@ public class ReviewServiceImpl implements ReviewService {
                                String photoUrl) {
         Menu menu = menuRepo.findById(menuId)
                 .orElseThrow(() -> new EntityNotFoundException("메뉴를 찾을 수 없습니다. id=" + menuId));
-
-        if (currentUser.getUsername() == null || currentUser.getUsername().trim().isEmpty()) {
-            throw new IllegalArgumentException("작성자 이름이 없습니다.");
-        }
-
-        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
-            throw new IllegalArgumentException("리뷰 내용은 비어있을 수 없습니다.");
-        }
 
         Review review = new Review();
         review.setMenu(menu);
@@ -50,7 +44,19 @@ public class ReviewServiceImpl implements ReviewService {
         review.setPhotoUrl(photoUrl);
         review.setLikeCount(0);
 
-        return reviewRepo.save(review);
+        Review saved = reviewRepo.save(review);
+
+        // ★ 리뷰 생성 후, 해당 메뉴의 리뷰 통계(개수와 평균)도 갱신
+        List<Review> allReviews = reviewRepo.findByMenuId(menuId);
+        int   newCount = allReviews.size();
+        double newAvg  = allReviews.stream()
+                .mapToInt(Review::getScore)
+                .average()
+                .orElse(0.0);
+        newAvg = Math.round(newAvg * 10) / 10.0;
+        menuService.updateReviewStats(menuId, newCount, newAvg);
+
+        return saved;
     }
 
     @Override
@@ -79,5 +85,15 @@ public class ReviewServiceImpl implements ReviewService {
             throw new AccessDeniedException("본인의 리뷰만 삭제할 수 있습니다.");
         }
         reviewRepo.delete(review);
+
+        // ★ 리뷰 삭제 후에도 메뉴 통계를 갱신
+        List<Review> allReviews = reviewRepo.findByMenuId(menuId);
+        int   newCount = allReviews.size();
+        double newAvg  = allReviews.stream()
+                .mapToInt(Review::getScore)
+                .average()
+                .orElse(0.0);
+        newAvg = Math.round(newAvg * 10) / 10.0;
+        menuService.updateReviewStats(menuId, newCount, newAvg);
     }
 }

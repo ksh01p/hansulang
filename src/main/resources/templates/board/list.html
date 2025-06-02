@@ -2,60 +2,121 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Hanssul-lin 메뉴 목록</title>
+    <title>Hanssul-lin 메뉴 목록 (게시판형)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/js/list.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-white text-black">
 
-<!-- 상단바 -->
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- list.js (defer 속성으로 문서 로딩 후 실행) -->
+    <script src="/js/list.js" defer></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<!-- ──────────── 네비게이션 (카드형 예시와 동일) ──────────── -->
 <nav class="bg-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
-
-            <!-- 왼쪽 로고 -->
             <div class="flex items-center w-1/3">
                 <a href="/board/list" class="text-white text-3xl font-bold">Hanssul-lin</a>
             </div>
-
-            <!-- 가운데 메뉴 -->
             <div class="w-1/3 flex justify-center space-x-6">
                 <div class="bg-white px-4 py-1 shadow inline-block rounded-full">
-                    <a href="/board/list" class="text-black text-xl font-medium font-bold">
-                        메뉴 목록
-                    </a>
+                    <a href="/board/list" class="text-black text-xl font-semibold">메뉴 목록</a>
                 </div>
-                <!-- 메뉴 등록: 일반 상태 -->
-                <div class="bg-black px-4 py-1 shadow inline-block rounded-full">
-                    <a href="/board/create" class="text-gray-300 hover:text-white text-xl font-medium font-bold">
-                        메뉴 등록
-                    </a>
+                <div class="bg-black px-4 py-1 shadow inline-block rounded-full hover:bg-gray-800 transition">
+                    <a href="/board/create" class="text-gray-300 hover:text-white text-xl font-semibold">메뉴 등록</a>
                 </div>
             </div>
-
-            <!-- 오른쪽 로그아웃 -->
             <div class="w-1/3 flex justify-end">
-                <a href="/logout" class="text-gray-300 hover:text-white text-xl font-medium font-bold">
-                    로그아웃
-                </a>
-
+                <a href="/logout" class="text-gray-300 hover:text-white text-xl font-semibold">로그아웃</a>
             </div>
         </div>
     </div>
 </nav>
 
-<!-- 내용 -->
-<div class="p-6">
-    <div class="text-right mb-4">
-        <a href="/board/create" class="bg-black text-white px-4 py-2 rounded-full">
-            + 새 메뉴 등록
-        </a>
+<!-- ──────────── 검색/정렬 바 ──────────── -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <!-- 검색 입력 -->
+        <div class="w-full md:w-1/3">
+            <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="메뉴명·식당명으로 검색"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+        </div>
+
+        <!-- 정렬 드롭다운 -->
+        <div class="flex space-x-2">
+            <select id="sortSelect"
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="price,ASC">가격 낮은순</option>
+                <option value="price,DESC">가격 높은순</option>
+                <!-- ── 리뷰 ── -->
+                <option value="reviewCount,DESC">리뷰 많은순</option>
+                <option value="reviewCount,ASC">리뷰 적은순</option>
+                <!-- ── 평점 ── -->
+                <option value="avgScore,DESC">평점 높은순</option>
+                <option value="avgScore,ASC">평점 낮은순</option>
+            </select>
+            <button id="sortBtn"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                정렬 적용
+            </button>
+        </div>
+
+        <!-- 새 메뉴 등록 버튼 -->
+        <div>
+            <a href="/board/create" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition">
+                + 새 메뉴 등록
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ──────────── 게시판(테이블) 영역 ──────────── -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+
+    <!-- 로딩 스피너 -->
+    <div id="loadingSpinner" class="flex justify-center my-12 hidden">
+        <svg class="animate-spin h-12 w-12 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
     </div>
 
-    <!-- JS로 채워질 그리드 -->
-    <div id="menuList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <!-- 빈 상태 표시 -->
+    <div id="emptyState" class="text-center text-gray-500 my-12 hidden">
+        <p class="text-xl mb-2">등록된 메뉴가 없습니다.</p>
+        <a href="/board/create" class="text-indigo-600 hover:underline">새 메뉴를 등록해 보세요.</a>
+    </div>
+
+    <!-- 메뉴 목록 테이블 -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-lg overflow-hidden shadow border border-gray-200">
+            <thead class="bg-gray-100">
+            <tr>
+                <!-- 이미지 컬럼은 생략하거나, 작은 썸네일만 보여주도록 할 수도 있습니다. -->
+                <!-- <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">이미지</th> -->
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">메뉴명</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">가격</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">식당</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">리뷰 수</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">평점</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">설명</th>
+                <th class="px-4 py-2 text-center text-sm font-medium text-gray-600">작업</th>
+            </tr>
+            </thead>
+            <tbody id="menuTableBody" class="divide-y divide-gray-200">
+            <!-- JavaScript로 여기 <tr>…</tr> 가 동적으로 추가됩니다 -->
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 </body>
