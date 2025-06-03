@@ -19,4 +19,5 @@ public interface ReviewService {
     void deleteReview(Long menuId,
                       Long reviewId,
                       User currentUser) throws AccessDeniedException;
+    void incrementLikeCount(Long reviewId);
 }
