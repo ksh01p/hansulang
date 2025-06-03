@@ -51,4 +51,11 @@ public class Menu {
 
     @Column(name = "updated_at", nullable = true)
     private Timestamp updated_at;
+
+    @Column(name = "time", nullable = true)
+    private String time;
+
+
+
+
 }
