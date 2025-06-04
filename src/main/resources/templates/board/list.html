@@ -355,6 +355,7 @@
         let currentSortBy = 'restaurant';
         let currentDirection = 'ASC';
         let viewMode = localStorage.getItem('viewMode') || 'table'; // 기본값은 테이블 뷰
+        let originalMenus = [];
 
         // 1) 현재 로그인 사용자 정보 조회
         $.get('/api/auth/me')
@@ -382,12 +383,14 @@
                 .done(menus => {
                     allMenus = menus;          // 서버에서 받은 전체 데이터 저장
                     filteredMenus = menus;     // 초기에는 그대로 다 보여줌
-
+                    if (originalMenus.length === 0) {
+                        originalMenus = menus.map(menu => ({ ...menu }));
+                    }
                     // 통계 데이터 계산 및 표시
                     updateStatistics(menus);
 
                     // 자주 본 메뉴(리뷰 많은 TOP 5) 표시
-                    updatePopularMenus(menus);
+                    updatePopularMenus();
 
                     // 선택된 필터 적용
                     applyFilter(activeFilter);
@@ -538,12 +541,13 @@
                 // 삭제 성공 시, 로컬 데이터에서 제거 후 다시 렌더링
                 allMenus = allMenus.filter(m => m.id !== id);
                 filteredMenus = filteredMenus.filter(m => m.id !== id);
+                originalMenus = originalMenus.filter(m => m.id !== id);
 
                 // 통계 정보 업데이트
                 updateStatistics(allMenus);
 
                 // 인기 메뉴 업데이트
-                updatePopularMenus(allMenus);
+                updatePopularMenus();
 
                 // 현재 뷰 모드에 따라 렌더링
                 updateViewMode(viewMode);
@@ -646,9 +650,9 @@
         }
 
         // 10) 인기 메뉴(리뷰 많은 탑 5) 표시
-        function updatePopularMenus(menus) {
+        function updatePopularMenus() {
             // 리뷰 많은 순으로 정렬
-            const popularMenus = [...menus]
+            const popularMenus = [...originalMenus]
                 .sort((a, b) => b.reviewCount - a.reviewCount)
                 .slice(0, 5); // 상위 5개만 추출
 
