@@ -96,4 +96,22 @@ public class ReviewServiceImpl implements ReviewService {
         newAvg = Math.round(newAvg * 10) / 10.0;
         menuService.updateReviewStats(menuId, newCount, newAvg);
     }
+    @Override
+    @Transactional
+    public void incrementLikeCount(Long reviewId) {
+        Review review = reviewRepo.findById(reviewId)
+                .orElseThrow(() -> new EntityNotFoundException("리뷰 없음: " + reviewId));
+        review.setLikeCount(review.getLikeCount() + 1);
+    }
+
+    private void updateMenuReviewStats(Long menuId) {
+        List<Review> allReviews = reviewRepo.findByMenuId(menuId);
+        int newCount = allReviews.size();
+        double newAvg = allReviews.stream()
+                .mapToInt(Review::getScore)
+                .average()
+                .orElse(0.0);
+        newAvg = Math.round(newAvg * 10) / 10.0;
+        menuService.updateReviewStats(menuId, newCount, newAvg);
+    }
 }

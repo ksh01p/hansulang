@@ -228,4 +228,12 @@ public class MenuRestController {
         dto.setCreatedAt(r.getCreatedAt());
         return dto;
     }
+    @PostMapping("/{menuId}/reviews/{reviewId}/like")
+    public ResponseEntity<Void> likeReview(
+            @PathVariable Long menuId,
+            @PathVariable Long reviewId
+    ) {
+        reviewService.incrementLikeCount(reviewId);
+        return ResponseEntity.ok().build();
+    }
 }

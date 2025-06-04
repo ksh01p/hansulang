@@ -38,24 +38,33 @@ $(function(){
                                  삭제
                                </button>`;
                     }
+                    const likeBtn = `<button data-id="${r.id}" class="like-review-btn text-blue-500 ml-2">좋아요</button>`;
+
                     $c.append(`
-                   <div class="border-b py-2">
-                     <p>
-                       <strong>${r.userName}</strong>
-                       <span class="text-gray-500 ml-2">
-                         ${r.createdAt.replace('T',' ')}
-                       </span>
-                       ${delBtn}
-                     </p>
-                     <p>
-                       점수: ${r.score}점
-                       ${r.recommend? '👍':'👎'}  
-                       좋아요: ${r.likeCount||0}
-                     </p>
-                     ${imgTag}
-                     <p class="mt-2">${r.content}</p>
-                   </div>
-                 `);
+              <div class="border-b py-4">
+                <div class="flex justify-between items-center">
+                  <p class="text-sm">
+                    <strong>${r.userName}</strong>
+                    <span class="text-gray-500 ml-2 text-xs">${r.createdAt.replace('T',' ')}</span>
+                    ${delBtn}
+                  </p>
+                </div>
+            
+                <div class="flex justify-between items-center mt-2">
+                  <p class="text-sm">
+                    점수: ${r.score}점 ${r.recommend ? '👍' : '👎'}
+                    좋아요: <span class="like-count text-blue-700 font-semibold" data-id="${r.id}">${r.likeCount || 0}</span>
+                  </p>
+            
+                  <button data-id="${r.id}" class="like-review-btn text-white text-xs font-medium px-3 py-1 rounded">
+                    ❤️
+                  </button>
+                </div>
+            
+                ${imgTag}
+                <p class="mt-2 text-sm">${r.content}</p>
+              </div>
+`);
                 });
             })
             .fail(() => $('#reviews').text("리뷰를 불러오지 못했습니다."));
@@ -91,5 +100,15 @@ $(function(){
             method: 'DELETE'
         }).done(loadReviews)
             .fail(() => alert('삭제에 실패했습니다.'));
+    });
+    $(document).on('click', '.like-review-btn', function(){
+        const reviewId = $(this).data('id');
+        $.post(`/api/menus/${menuId}/reviews/${reviewId}/like`)
+            .done(() => {
+                // 해당 리뷰의 좋아요 수 증가
+                const $count = $(`.like-count[data-id="${reviewId}"]`);
+                $count.text(parseInt($count.text()) + 1);
+            })
+            .fail(() => alert('좋아요 실패'));
     });
 });
