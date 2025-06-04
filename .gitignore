@@ -1,0 +1,20 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Compiled class files
+*.class
+
+# Test reports
+build/reports/
+build/test-results/
+
+# Other
+out/
